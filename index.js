@@ -4,11 +4,15 @@ const admin = require("firebase-admin");
 const app = express();
 app.use(express.json());
 
-// 🔥 Load Firebase config from ENV
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-
-// Fix private key newline issue
-serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+// 🔥 Load Firebase config from ENV or local file
+let serviceAccount;
+if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  // Fix private key newline issue
+  serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+} else {
+  serviceAccount = require("./serviceAccountKey.json");
+}
 
 // Initialize Firebase Admin (prevent multiple init)
 if (!admin.apps.length) {
@@ -54,6 +58,10 @@ app.post("/send-notification", async (req, res) => {
   }
 });
 
-// ❌ REMOVE app.listen()
-// ✅ Export for Vercel
+// ✅ Listen locally when run directly; export for Vercel serverless
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+
 module.exports = app;
