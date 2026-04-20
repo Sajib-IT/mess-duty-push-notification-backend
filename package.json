@@ -2,13 +2,11 @@
   "name": "mess-duty-push-notification",
   "version": "1.0.0",
   "description": "Firebase Push Notification API using Express.js",
-  "main": "index.js",
+  "main": "api/index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon api/index.js"
   },
   "dependencies": {
-    "dotenv": "^17.4.2",
     "express": "^4.18.2",
     "firebase-admin": "^12.0.0"
   },
