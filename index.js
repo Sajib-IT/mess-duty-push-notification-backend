@@ -28,10 +28,22 @@ if (!admin.apps.length) {
 app.post("/send-notification", async (req, res) => {
   const { fcmToken, title, body } = req.body;
 
-  if (!fcmToken || !title || !body) {
+  if (!fcmToken) {
     return res.status(400).json({
       success: false,
-      message: "fcmToken, title, and body are required.",
+      message: "fcmToken is required.",
+    });
+  }
+    if (!title ) {
+    return res.status(400).json({
+      success: false,
+      message: "title is required.",
+    });
+  }
+    if ( !body) {
+    return res.status(400).json({
+      success: false,
+      message: "body is required.",
     });
   }
 
