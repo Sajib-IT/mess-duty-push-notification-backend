@@ -61,7 +61,15 @@ app.post("/send-notification", async (req, res) => {
 // ✅ Listen locally when run directly; export for Vercel serverless
 if (require.main === module) {
   const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  server.on("error", (err) => {
+    if (err.code === "EADDRINUSE") {
+      console.error(`Port ${PORT} is already in use. Kill the existing process and restart.`);
+      process.exit(1);
+    } else {
+      throw err;
+    }
+  });
 }
 
 module.exports = app;
